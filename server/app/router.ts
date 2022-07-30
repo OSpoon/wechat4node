@@ -8,4 +8,5 @@ export default (app: Application) => {
   router.get('/token', controller.home.token);
   router.get('/ticket', controller.home.ticket);
   router.post('/signature', controller.home.signature);
+  router.post('/juejin-sign-notice', controller.home.jueJinSignNotice);
 };

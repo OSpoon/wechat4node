@@ -3,7 +3,7 @@ import { Controller } from 'egg';
 export default class HomeController extends Controller {
   public async index() {
     const { ctx } = this;
-    ctx.body = '';
+    ctx.body = 'hh';
   }
 
   public async checkOrigin() {
@@ -32,5 +32,13 @@ export default class HomeController extends Controller {
     const { url } = ctx.request.body;
     console.log('[ url ] >', url);
     ctx.body = await ctx.service.weChat.genSignature(url);
+  }
+
+  public async jueJinSignNotice() {
+    const { ctx } = this;
+    const { from, result } = ctx.request.body;
+    console.log('[ from ] >', from);
+    console.log('[ result ] >', result);
+    ctx.body = await ctx.service.weChat.sendSignTemplate(from, result);
   }
 }

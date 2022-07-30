@@ -8,6 +8,7 @@ const TOKEN = 'TOKEN';
 const URL_TOKEN = `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${APPID}&secret=${APPSECRET}`;
 const URL_TICKET =
   'https://api.weixin.qq.com/cgi-bin/ticket/getticket?type=jsapi';
+const URL_TEMPLATE = 'https://api.weixin.qq.com/cgi-bin/message/template/send';
 
 const cache: {
   token: {
@@ -114,5 +115,49 @@ export default class WeChat extends Service {
       timestamp,
       signature,
     };
+  }
+
+  public async sendTemplate(_data: any) {
+    const { ctx } = this;
+    const request = async () => {
+      const { access_token } = await this.getToken();
+      const { data } = await ctx.curl(
+        `${URL_TEMPLATE}?access_token=${access_token}`,
+        {
+          dataType: 'json',
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+          },
+          data: {
+            touser: '',
+            template_id: '',
+            url: 'https://juejin.cn/user/3966693685871694',
+            topcolor: '#FF0000',
+            data: _data,
+          },
+        },
+      );
+      console.log('[ data ] >', data);
+      return data;
+    };
+    return await request();
+  }
+
+  public async sendSignTemplate(from: string, result: string) {
+    return await this.sendTemplate({
+      from: {
+        value: from,
+        color: '#173177',
+      },
+      date: {
+        value: new Date().toLocaleString(),
+        color: '#173177',
+      },
+      result: {
+        value: result,
+        color: '#173177',
+      },
+    });
   }
 }
